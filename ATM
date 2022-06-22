@@ -1,0 +1,467 @@
+//使用链表完成系统，账户信息从文档中读取，并用链表存放
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct users
+{
+	char cardnum[17];//银行卡号
+	char name[20];//用户姓名 
+	char DID[19];//身份证号 
+	float Balance;//余额 
+	int  password;//银行卡密码 
+	struct users *next;//指向下一个结点// 
+};
+char C[3];
+char title[53];
+int B=7;
+	int language;
+void randc()
+{
+	int j,m;
+	j=B%10;
+	m=B/10;
+	C[0]=m+'0';
+	C[1]=j+'0';
+}
+void over()
+{
+	int i;char c;
+	printf("输入任意数字退出！\n");
+	printf("请输入数字:");
+	scanf("%d",&i);
+	c=getchar();
+ } 
+struct users *readuser(struct users *u)
+{
+	struct users *r=NULL,*p=NULL;
+	FILE *fp;//定义文件指针
+	p=u=(struct users *)malloc(sizeof(struct users));
+	if ((fp = fopen("D:/ATM管理系统.txt", "r")) == NULL)
+		printf("ATM管理系统文件不存在 \n");
+	else
+	{   
+		fgets(title, 54, fp);//读取第一行说明:银行卡号，用户姓名，身份证号，余额，银行卡密码等;
+		r=(struct users *)malloc(sizeof(struct users));
+		while (fscanf(fp,"%s%s%s%d%f",&r->cardnum,&r->name,&r->DID,&r->password,&r->Balance)!=EOF)//如果文件没有读取结束，继续读取// 
+		{
+			p->next=r;
+			p=r;
+			r=(struct users *)malloc(sizeof(struct users));
+		}
+		p->next=NULL;
+	}
+	fclose(fp);
+	fp=NULL;
+	return u;
+}
+void saveusers(struct users *u)
+{
+	struct users *r=NULL;
+	FILE *fp;
+	r=u->next;
+	fp=fopen("ATM管理系统.txt","w+");
+	fputs(title,fp);
+	while(r!=NULL)
+	{
+		fprintf(fp,"\n%s\t%s\t\t%s\t%d\t\t%f\n",r->cardnum,r->name,r->DID,r->password,r->Balance);
+		r=r->next;
+	}
+	fclose(fp);
+}
+struct users *finduser(struct users *u)
+{
+	char card[17];
+	char c;
+	int pass;//密码 
+	struct users *r=NULL;
+	int i,t; 
+	while(1)
+	{
+		r=u->next;
+		printf("请输入银行卡号：");
+		gets(card);
+		printf("请输入密码：");
+		scanf("%d",&pass);
+		c=getchar();
+		t=0;
+		while(r!=NULL)
+		{
+			if(strcmp(r->cardnum,card)==0&&r->password==pass)
+			{
+				t=1;
+				return r;
+			}
+			else
+				r=r->next;
+		}
+		if(t==0)
+			printf("密码或银行卡号错误！\n");
+		printf("请选择  1.继续输入；2.退出；\n");
+		printf("请输入选项(点击任意键，继续输入)：");
+		scanf("%d",&i);
+		c=getchar();
+		switch(i)
+		{
+			case 2:
+				return NULL;
+			default :
+				break;
+		}
+	}
+} 
+struct users *deposit(struct users *e)
+{
+	int i;
+	char c;
+	float b;
+	printf("请确认账户信息！1.确定，2取消\n");
+	printf("银行卡号：%s\n",e->cardnum);
+	printf("姓名：%s\n",e->name);
+	printf("请输入选项：");
+	scanf("%d",&i);
+	c=getchar();
+	if(i==1)
+	{
+		printf("请输入存入余额：");
+		scanf("%f",&b);
+		e->Balance=e->Balance+b;
+		printf("存入成功！\n");
+	}
+	else
+	{
+		printf("取消存款！\n");
+	}
+	return e;
+}
+struct users *Withdrawal(struct users *e)
+{
+	int i;
+	char c;
+	float b;
+	printf("请输入取款金额:");
+	scanf("%f",&b);
+	c=getchar();
+	while(b>e->Balance)
+	{
+		printf("余额不足！请重新选择！\n");
+		printf("1.重新输入金额  2.取消取款\n");
+		printf("请输入选项:");
+		scanf("%d",&i);
+		c=getchar();
+		if(i==1) 
+		{
+			printf("请输入取款金额:");
+			scanf("%f",&b);
+		}
+		else
+		{
+			return e;//退出 
+		}
+	}
+	e->Balance=e->Balance-b;
+	printf("取款成功！\n");
+	return e;
+}
+struct users *Transfer(struct users *e,struct users *u)
+{
+	char card[17];
+	char c;
+	struct users *r=NULL;
+	int i,j,t; 
+	float b;
+	while(1)
+	{
+		r=u->next;
+		printf("请输入转账银行卡号：");
+		gets(card);
+		t=0;
+		while(r!=NULL)
+		{
+			if(strcmp(r->cardnum,card)==0)//查找转账账户 
+			{
+				t=1;
+				printf("请确认转账账户信息：\n");
+				printf("银行卡号：%s\n",r->cardnum);
+				printf("姓名：%s\n",r->name);
+				printf("请确认账户信息！1.确定，2取消\n");
+				printf("请输入选项：");
+				scanf("%d",&i);
+				c=getchar();
+				if(i==1)
+				{
+					printf("请输入转入金额：");
+					scanf("%f",&b);
+					c=getchar();
+					while(b>e->Balance)
+					{
+						printf("余额不足！请重新选择！\n");
+						printf("1.重新输入金额  2.取消转账\n");
+						printf("请输入选项:");
+						scanf("%d",&j);
+						c=getchar();
+						if(j==1) 
+						{
+							printf("请输入转账金额:");
+							scanf("%f",&b);
+						}
+						else
+						{
+							printf("取消转款！\n");
+							return u;
+						}
+					}
+					//转账
+					e->Balance=e->Balance-b;
+					r->Balance=r->Balance+b;
+					printf("转款成功！\n");
+					return u;
+				}
+				else
+				{
+					printf("取消转款！\n");
+					return u;
+				}
+			}
+			else
+			{
+				r=r->next;
+			}
+		}
+		if(t==0)
+		{
+			printf("银行卡号错误！\n");
+			printf("请选择  1.继续输入；2.退出；\n");
+			printf("请输入选项(点击任意键，继续输入)：");
+			scanf("%d",&i);
+			c=getchar();
+			switch(i)
+			{
+				case 2:
+					return u;
+				default :
+					break;
+			}
+		}
+	}		
+} 
+struct users *create(struct users *u)
+{
+	int i;
+	struct users *s=NULL;
+	s=(struct users *)malloc(sizeof(struct users));
+	printf("请输入身份证：");
+	gets(s->DID);
+	printf("请输入姓名：");
+	gets(s->name);
+	printf("请输入密码（6位）：");
+	scanf("%d",&s->password);
+	randc();
+	strcpy(s->cardnum,"01234567890000");
+	strcat(s->cardnum,C);
+	s->Balance=0;
+	printf("是否确定创建用户：1.确定 2.取消\n");
+	printf("请输入选项:");
+	scanf("%d",&i);
+	if(i==1)
+	{
+		s->next=u->next;
+		u->next=s;
+		B++;
+		printf("创建成功！\n");
+		printf("%s",title);
+		printf("\n%s\t%s\t\t%s\t%d\t\t%f\n",s->cardnum,s->name,s->DID,s->password,s->Balance);
+	}
+	else
+	{
+		free(s);
+		printf("取消创建\n");
+	}
+	return u;
+}
+struct users *del(struct users *u)
+{
+	struct users *e=NULL,*q=NULL;
+	int i; 
+	char card[17];
+	int pass;//密码
+	char D[19];
+	char c;
+	e=u;
+	q=e->next;
+	printf("请输入银行卡号：");
+	gets(card);
+	printf("请输入密码：");
+	scanf("%d",&pass);
+	c=getchar();
+	while(q!=NULL)
+	{
+		if(strcmp(q->cardnum,card)==0&&q->password==pass)
+		{
+			break;
+		}
+		e=q;
+		q=q->next;
+	}
+	if(q==NULL)//查找账户失败！退出 
+	{
+		printf("查找账户失败！");
+		over();
+		return u;
+	}
+	printf("请输入身份证号：");
+	gets(D);
+	while(1)
+	{
+		if(strcmp(q->DID,D)==0)
+		{
+			printf("取出余额%f\n",q->Balance);
+			printf("销户成功！\n");
+			e->next=q->next;
+			free(q);
+			return u;
+		}
+		else
+		{
+			printf("身份证号错误！\n");
+			printf("1.重新输入身份证号  2.取消注销\n");
+			printf("请输入选项:");
+			scanf("%d",&i);
+			c=getchar();
+			if(i==1)
+			{
+				printf("请输入身份证号：");
+				gets(D);
+			}
+			else
+			{
+				printf("取消注销\n");
+				return u;
+			}
+		}
+	}
+}
+void menu()
+{
+	if(language==1)
+	{
+		system("cls");   //清屏操作 
+ 	    printf("*     欢迎进入ATM管理系统   *\n");
+	    printf("*****************************\n");
+	    printf("*      1.查询账户余额       *\n");
+    	printf("*      2.存        款       *\n");
+    	printf("*      3.取        款       *\n"); 
+    	printf("*      4.转        账       *\n");
+    	printf("*      5.开户               *\n"); 
+    	printf("*      6.销户               *\n");//销户取出所有余额
+   	    printf("*      7.退  出  系  统     *\n");
+    	printf("*****************************\n");
+	}
+	if(language==2)
+	{
+		system("cls");   //清屏操作 
+    	printf("* welcome to ATM Management System  *\n");
+    	printf("*************************************\n");
+    	printf("*      1.Account Balance            *\n");
+    	printf("*      2.Deposits                   *\n");
+    	printf("*      3.Withdrawals                *\n"); 
+    	printf("*      4.Transfers                  *\n");
+    	printf("*      5.Account                    *\n"); 
+    	printf("*      6.Deregistration             *\n");//销户取出所有余额
+    	printf("*      7.Withdraw from the system   *\n");
+    	printf("*************************************\n");
+	}
+} 
+int main()
+{
+	printf("      选择中文 请按1  \n");
+	printf("      choose English,press  2\n");
+	scanf("%d",&language);
+	 menu();
+	struct users *u=NULL;
+	struct users *e=NULL; 
+	int j,i;
+	char c;
+	u=readuser(u);//读取用户信息// 
+	while (1)
+	{  
+	
+		printf("请输入你的选择:");
+		scanf("%d",&j);
+		c=getchar();
+		switch(j)
+		{
+			//查询账户余额 
+			case 1:
+				e=finduser(u);//查找用户 
+				if(e==NULL)//查找账户失败！退出 
+				{
+					printf("查找账户失败！");
+					over();
+					break;
+				}
+				else
+				{
+					printf("账户余额为：%f\n",e->Balance);
+					over();
+					break;
+				}
+			//存款 
+			case 2:
+				e=finduser(u);//查找用户 
+				if(e==NULL)//查找账户失败！退出 
+				{
+					printf("查找账户失败！");
+					over();
+					break; 
+				}
+				e=deposit(e);
+				saveusers(u);
+				over();
+				break;
+			//取钱 
+			case 3:
+				e=finduser(u);//查找用户 
+				if(e==NULL)//查找账户失败！退出 
+				{
+					printf("查找账户失败！");
+					over();
+					break;
+				}
+				e=Withdrawal(e);
+				saveusers(u);
+				over();
+				break;
+			//转账 
+			case 4:
+				e=finduser(u);//查找用户 
+				if(e==NULL)//查找账户失败！退出 
+				{
+					printf("查找账户失败！");
+					over();
+					break; 
+				}
+				u=Transfer(e,u);
+				saveusers(u);
+				over();
+				break;
+			//开户
+			case 5:
+				u=create(u);
+				saveusers(u);
+				over();
+				break;
+			//销户 
+			case 6:
+				u=del(u);
+				saveusers(u);
+				over();
+				break; 
+			case 7:
+				return 0;
+			default:
+				printf("输入的选项错误，请重新输入!\n");
+				break;
+			}
+				
+		}
+}
