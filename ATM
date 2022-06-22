@@ -1,15 +1,14 @@
-//使用链表完成系统，账户信息从文档中读取，并用链表存放
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
 struct users
 {
-	char cardnum[17];//银行卡号
-	char name[20];//用户姓名 
-	char DID[19];//身份证号 
-	float Balance;//余额 
-	int  password;//银行卡密码 
-	struct users *next;//指向下一个结点// 
+	char cardnum[17];
+	char name[20];
+	char DID[19];
+	float Balance;
+	int  password;
+	struct users *next;
 };
 char C[3];
 char title[53];
@@ -34,13 +33,13 @@ void over()
 struct users *readuser(struct users *u)
 {
 	struct users *r=NULL,*p=NULL;
-	FILE *fp;//定义文件指针
+	FILE *fp;
 	p=u=(struct users *)malloc(sizeof(struct users));
 	if ((fp = fopen("D:/ATM管理系统.txt", "r")) == NULL)
 		printf("ATM管理系统文件不存在 \n");
 	else
 	{   
-		fgets(title, 54, fp);//读取第一行说明:银行卡号，用户姓名，身份证号，余额，银行卡密码等;
+		fgets(title, 54, fp);
 		r=(struct users *)malloc(sizeof(struct users));
 		while (fscanf(fp,"%s%s%s%d%f",&r->cardnum,&r->name,&r->DID,&r->password,&r->Balance)!=EOF)//如果文件没有读取结束，继续读取// 
 		{
@@ -72,7 +71,7 @@ struct users *finduser(struct users *u)
 {
 	char card[17];
 	char c;
-	int pass;//密码 
+	int pass; 
 	struct users *r=NULL;
 	int i,t; 
 	while(1)
@@ -155,7 +154,7 @@ struct users *Withdrawal(struct users *e)
 		}
 		else
 		{
-			return e;//退出 
+			return e; 
 		}
 	}
 	e->Balance=e->Balance-b;
@@ -177,7 +176,7 @@ struct users *Transfer(struct users *e,struct users *u)
 		t=0;
 		while(r!=NULL)
 		{
-			if(strcmp(r->cardnum,card)==0)//查找转账账户 
+			if(strcmp(r->cardnum,card)==0)
 			{
 				t=1;
 				printf("请确认转账账户信息：\n");
@@ -210,7 +209,7 @@ struct users *Transfer(struct users *e,struct users *u)
 							return u;
 						}
 					}
-					//转账
+			
 					e->Balance=e->Balance-b;
 					r->Balance=r->Balance+b;
 					printf("转款成功！\n");
@@ -283,7 +282,7 @@ struct users *del(struct users *u)
 	struct users *e=NULL,*q=NULL;
 	int i; 
 	char card[17];
-	int pass;//密码
+	int pass;
 	char D[19];
 	char c;
 	e=u;
@@ -302,7 +301,7 @@ struct users *del(struct users *u)
 		e=q;
 		q=q->next;
 	}
-	if(q==NULL)//查找账户失败！退出 
+	if(q==NULL)
 	{
 		printf("查找账户失败！");
 		over();
@@ -344,7 +343,7 @@ void menu()
 {
 	if(language==1)
 	{
-		system("cls");   //清屏操作 
+		system("cls");  
  	    printf("*     欢迎进入ATM管理系统   *\n");
 	    printf("*****************************\n");
 	    printf("*      1.查询账户余额       *\n");
@@ -352,13 +351,13 @@ void menu()
     	printf("*      3.取        款       *\n"); 
     	printf("*      4.转        账       *\n");
     	printf("*      5.开户               *\n"); 
-    	printf("*      6.销户               *\n");//销户取出所有余额
+    	printf("*      6.销户               *\n");
    	    printf("*      7.退  出  系  统     *\n");
     	printf("*****************************\n");
 	}
 	if(language==2)
 	{
-		system("cls");   //清屏操作 
+		system("cls"); 
     	printf("* welcome to ATM Management System  *\n");
     	printf("*************************************\n");
     	printf("*      1.Account Balance            *\n");
@@ -366,7 +365,7 @@ void menu()
     	printf("*      3.Withdrawals                *\n"); 
     	printf("*      4.Transfers                  *\n");
     	printf("*      5.Account                    *\n"); 
-    	printf("*      6.Deregistration             *\n");//销户取出所有余额
+    	printf("*      6.Deregistration             *\n");
     	printf("*      7.Withdraw from the system   *\n");
     	printf("*************************************\n");
 	}
@@ -381,7 +380,7 @@ int main()
 	struct users *e=NULL; 
 	int j,i;
 	char c;
-	u=readuser(u);//读取用户信息// 
+	u=readuser(u);
 	while (1)
 	{  
 	
@@ -390,10 +389,10 @@ int main()
 		c=getchar();
 		switch(j)
 		{
-			//查询账户余额 
+			
 			case 1:
-				e=finduser(u);//查找用户 
-				if(e==NULL)//查找账户失败！退出 
+				e=finduser(u); 
+				if(e==NULL) 
 				{
 					printf("查找账户失败！");
 					over();
@@ -405,10 +404,10 @@ int main()
 					over();
 					break;
 				}
-			//存款 
+		
 			case 2:
-				e=finduser(u);//查找用户 
-				if(e==NULL)//查找账户失败！退出 
+				e=finduser(u);
+				if(e==NULL)
 				{
 					printf("查找账户失败！");
 					over();
@@ -418,10 +417,10 @@ int main()
 				saveusers(u);
 				over();
 				break;
-			//取钱 
+		
 			case 3:
-				e=finduser(u);//查找用户 
-				if(e==NULL)//查找账户失败！退出 
+				e=finduser(u);
+				if(e==NULL)
 				{
 					printf("查找账户失败！");
 					over();
@@ -431,10 +430,10 @@ int main()
 				saveusers(u);
 				over();
 				break;
-			//转账 
+		
 			case 4:
-				e=finduser(u);//查找用户 
-				if(e==NULL)//查找账户失败！退出 
+				e=finduser(u); 
+				if(e==NULL)
 				{
 					printf("查找账户失败！");
 					over();
@@ -444,13 +443,13 @@ int main()
 				saveusers(u);
 				over();
 				break;
-			//开户
+			
 			case 5:
 				u=create(u);
 				saveusers(u);
 				over();
 				break;
-			//销户 
+			
 			case 6:
 				u=del(u);
 				saveusers(u);
