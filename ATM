@@ -84,7 +84,7 @@ void drawMoney()
 	}
 	else if(language==2)
 	{
-		printf("enter your draw money：");
+	    printf("enter your draw money：");
 	    int money;
 	    scanf("%d",&money);
 	
@@ -120,7 +120,7 @@ void saveMoney()
 {
 	if(language==1)
 	{
-		printf("请输入存款金额：");
+	    printf("请输入存款金额：");
 	    int money;
 	    scanf("%d",&money);
 	    printf("存款成功！！！\n");
@@ -140,7 +140,7 @@ void updataPassword()
 {
 	if(language==1)
 	{
-		printf("请输入旧密码:");
+	    printf("请输入旧密码:");
 	    char oldpassword[100];
 	    scanf("%s",oldpassword);
 	    if(strcmp(oldpassword,curAccount->password)==0)
@@ -172,7 +172,7 @@ void updataPassword()
 	}
 	else if(language==2)
 	{
-		printf("enter your old code:");
+	    printf("enter your old code:");
 	    char oldpassword[100];
 	    scanf("%s",oldpassword);
 	    if(strcmp(oldpassword,curAccount->password)==0)
@@ -383,31 +383,31 @@ void showMenu()
 	{
 		if(language==1)
 		{
-			system("cls");
- 	    printf("*     欢迎进入ATM管理系统   *\n");
-	    printf("*****************************\n");
-	    printf("*        1.登录             *\n");
-    	printf("*        2.开户             *\n");
-    	printf("*        3.修改密码         *\n"); 
-    	printf("*        4.取款             *\n");
-    	printf("*        5.存款             *\n"); 
-    	printf("*        6.转账             *\n");
-   	    printf("*        7.退  出  系  统   *\n");
-    	printf("*****************************\n");
+		      system("cls");
+                      printf("*     欢迎进入ATM管理系统   *\n");
+                      printf("*****************************\n");
+                      printf("*        1.登录             *\n");
+                      printf("*        2.开户             *\n");
+    	              printf("*        3.修改密码         *\n"); 
+    	              printf("*        4.取款             *\n");
+    	              printf("*        5.存款             *\n"); 
+                      printf("*        6.转账             *\n");
+   	              printf("*        7.退  出  系  统   *\n");
+    	              printf("*****************************\n");
 		}
 		else if(language==2)
 		{
-			system("cls");
-    	printf("*  welcome to ATM Management System *\n");
-    	printf("*************************************\n");
-    	printf("*        1.login                    *\n");
-    	printf("*        2.Account                  *\n");
-    	printf("*        3.Change the password      *\n"); 
-    	printf("*        4.Withdrawal               *\n");
-    	printf("*        5.deposit                  *\n"); 
-    	printf("*        6.Transfer                 *\n");
-    	printf("*        7.Withdraw from the syste  *\n");
-    	printf("*************************************\n");
+		      system("cls");
+                      printf("*  welcome to ATM Management System *\n");
+                      printf("*************************************\n");
+    	              printf("*        1.login                    *\n");
+    	              printf("*        2.Account                  *\n");
+                      printf("*        3.Change the password      *\n"); 
+    	              printf("*        4.Withdrawal               *\n");
+                      printf("*        5.deposit                  *\n"); 
+    	              printf("*        6.Transfer                 *\n");
+    	              printf("*        7.Withdraw from the syste  *\n");
+    	              printf("*************************************\n");
 		}
 		int n;
 		scanf("%d",&n);
@@ -418,9 +418,8 @@ void showMenu()
 		 	system("pause");
 		}
 		else if(n==2)
-	    {
-
-	    	system("cls");
+	        {
+	    	        system("cls");
 			signUp();
 			system("pause");
 		}
@@ -478,12 +477,9 @@ void loadData()
 	{
 		while(!feof(fp))
 		{
-
 			Account *newNode=(Account *)malloc(sizeof(Account));
-
 			newNode->next=NULL;
 			fscanf(fp,"%s\t%s\t%s\t%s\t%s\t%f\n",newNode->name,newNode->password,newNode->username,newNode->idCard,newNode->tel,&newNode->money);
-
 			if(head==NULL)
 			{
 				head=newNode;
@@ -504,7 +500,7 @@ void saveData()
 	FILE* fp=fopen("D:/atm.txt","w");
 	if(fp!=NULL)
 	{
-		Account* curP=head;
+	    Account* curP=head;
 	    while(curP!=NULL)
 	    {
 		    fprintf(fp,"%s\t%s\t%s\t%s\t%s\t%f\n",curP->name,curP->password,curP->username,curP->idCard,curP->tel,curP->money);
